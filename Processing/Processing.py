@@ -1,10 +1,15 @@
 import sys
 import os
 
+import PIL.Image
+import PIL.ImageColor
 from PySide6.QtCore import QThread, Signal
 from PySide6.QtWidgets import QFileDialog
 import numpy as np
 import cv2
+from scipy import misc
+from skimage.io import imread
+import PIL
 
 class clsBMPToSTRConverter(QThread):
     finished = Signal()
@@ -26,8 +31,13 @@ class clsBMPToSTRConverter(QThread):
     def startConversion(self):
         #Copy the image into a 2D np array
         #Only read the blue channel
-        np2DArrayInputImage = cv2.imread(self.image_file_path)[:, :, 0]
-        
+        #np2DArrayInputImage = cv2.imread(self.image_file_path)[:, :, 0]
+        #np2DArrayInputImage = imread(self.image_file_path)[:, :, 2]
+        PIL.Image.MAX_IMAGE_PIXELS = None
+        inputImage = PIL.Image.open(self.image_file_path)
+        rgb_inputImage = inputImage.convert('RGB')
+        np2DArrayInputImage = np.array(rgb_inputImage)[:, :, 2]
+
         #Covert the 2D array into a 1D STR file
         #Find the image dimensions
         imageWidth = np2DArrayInputImage.shape[1]
@@ -42,3 +52,4 @@ class clsBMPToSTRConverter(QThread):
         self.byteArrayInputImage = np1DArrayIntInputImage.tobytes()
         #Emit the singal for saving the file
         self.signalSaveOutputFile.emit()
+    
