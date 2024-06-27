@@ -6,9 +6,9 @@ import PIL.ImageColor
 from PySide6.QtCore import QThread, Signal
 from PySide6.QtWidgets import QFileDialog
 import numpy as np
-import cv2
-from scipy import misc
-from skimage.io import imread
+#import cv2
+#from scipy import misc
+#from skimage.io import imread
 import PIL
 
 class clsBMPToSTRConverter(QThread):
